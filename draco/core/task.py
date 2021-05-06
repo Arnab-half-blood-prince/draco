@@ -6,7 +6,7 @@ from inspect import getfullargspec
 
 import numpy as np
 
-from caput import pipeline, config, memh5
+from caput import fileformats, config, memh5, pipeline
 
 
 class MPILogFilter(logging.Filter):
@@ -262,6 +262,11 @@ class SingleTask(MPILoggedTask, pipeline.BasicContMixin):
 
     output_root = config.Property(default="", proptype=str)
     output_name = config.Property(default="{output_root}{tag}.h5", proptype=str)
+    output_format = config.Property(
+        default=fileformats.HDF5, proptype=fileformats.FileFormat
+    )
+    output_compression = config.Property(default=None, proptype=str)
+    output_compression_opts = config.Property(default=None)
 
     nan_check = config.Property(default=True, proptype=bool)
     nan_skip = config.Property(default=True, proptype=bool)
@@ -390,7 +395,13 @@ class SingleTask(MPILoggedTask, pipeline.BasicContMixin):
             outfile = os.path.expandvars(outfile)
 
             self.log.debug("Writing output %s to disk.", outfile)
-            self.write_output(outfile, output)
+            self.write_output(
+                outfile,
+                output,
+                file_format=self.output_format,
+                compression=self.output_compression,
+                compression_opts=self.output_compression_opts,
+            )
 
     def _nan_process_output(self, output):
         # Process the output to check for NaN's
