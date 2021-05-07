@@ -262,9 +262,7 @@ class SingleTask(MPILoggedTask, pipeline.BasicContMixin):
 
     output_root = config.Property(default="", proptype=str)
     output_name = config.Property(default="{output_root}{tag}.h5", proptype=str)
-    output_format = config.Property(
-        default=fileformats.HDF5, proptype=fileformats.FileFormat
-    )
+    output_format = config.file_format()
     output_compression = config.Property(default=None, proptype=str)
     output_compression_opts = config.Property(default=None)
 
