@@ -67,6 +67,16 @@ except ImportError:
     COMPRESSION = None
     COMPRESSION_OPTS = None
 
+chunk_sizes_default = {
+    "freq": 64,
+    "input": 128,
+    "pix": 128,
+    "pol": 2,
+    "ra": 128,
+    "stack": 256,
+    "time": 128,
+}
+
 
 class ContainerBase(memh5.BasicCont):
     """A base class for pipeline containers.
@@ -271,6 +281,40 @@ class ContainerBase(memh5.BasicCont):
         dset.attrs["axis"] = np.array(axes)
 
         return dset
+
+    def chunkify(self):
+        """Ensure datasets that have chunk/compression specs are chunked.
+
+        For every dataset, check if chunks and compression are set, and
+        if not set them to dataset_spec values.
+        """
+        for dset in self.dataset_spec:
+            if self[dset].chunks is None:
+                chunks = ()
+                if "chunks" in self.dataset_spec[dset]:
+                    # ensure chunks aren't larger than dataset shape
+                    for i, l in enumerate(self[dset].shape):
+                        chunks += (min(self.dataset_spec[dset]["chunks"][i], l),)
+                    self._data._storage_root[dset].chunks = chunks
+                elif "axes" in self.dataset_spec[dset]:
+                    # Use default values based on axes names, or fall back to use axis shape
+                    for i, l in enumerate(self[dset].shape):
+                        axis_name = self.dataset_spec[dset]["axes"][i]
+                        chunks += (chunk_sizes_default.get(axis_name, l),)
+            if (
+                "compression" in self.dataset_spec[dset]
+                and self[dset].compression is None
+            ):
+                self._data._storage_root[dset].compression = self.dataset_spec[dset][
+                    "compression"
+                ]
+            if (
+                "compression_opts" in self.dataset_spec[dset]
+                and self[dset].compression_opts is None
+            ):
+                self._data._storage_root[dset].compression_opts = self.dataset_spec[
+                    dset
+                ]["compression_opts"]
 
     @property
     def datasets(self):
