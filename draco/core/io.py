@@ -40,7 +40,7 @@ from drift.core import telescope, manager, beamtransfer
 from . import task
 from ..util.exception import ConfigError
 from ..util.truncate import bit_truncate_weights, bit_truncate_fixed
-from .containers import SiderealStream, TimeStream, TrackBeam
+from .containers import RingMap, SiderealStream, TimeStream, TrackBeam
 
 
 TRUNC_SPEC = {
@@ -58,6 +58,12 @@ TRUNC_SPEC = {
     },
     TrackBeam: {
         "dataset": ["beam", "weight"],
+        "weight_dataset": ["weight", None],
+        "fixed_precision": 1e-4,
+        "variance_increase": 1e-3,
+    },
+    RingMap: {
+        "dataset": ["map", "weight", "dirty_beam", "rms"],
         "weight_dataset": ["weight", None],
         "fixed_precision": 1e-4,
         "variance_increase": 1e-3,
@@ -745,10 +751,9 @@ class Truncate(task.SingleTask):
                 or self.variance_increase is None
             ):
                 raise config.CaputConfigError(
-                    "Container {} has no preset values. You must define all of 'dataset', "
-                    "'fixed_precision', and 'variance_increase' properties in the config.".format(
-                        container
-                    )
+                    f"Can't truncate data in {container}, because that container has no preset values defined in the "
+                    f"source code. It must define all of 'dataset', 'fixed_precision', and 'variance_increase' "
+                    f"properties in the config."
                 )
         # Factor of 3 for variance over uniform distribution of truncation errors
         self.variance_increase *= 3
