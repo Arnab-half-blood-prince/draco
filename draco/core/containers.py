@@ -952,6 +952,9 @@ class SiderealStream(FreqContainer, VisContainer, SiderealContainer):
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
             "chunks": (64, 256, 128),
+            "truncate": {
+                "weight_dataset": "vis_weight",
+            },
         },
         "vis_weight": {
             "axes": ["freq", "stack", "ra"],
@@ -962,6 +965,7 @@ class SiderealStream(FreqContainer, VisContainer, SiderealContainer):
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
             "chunks": (64, 256, 128),
+            "truncate": True,
         },
         "input_flags": {
             "axes": ["input", "ra"],
@@ -1087,6 +1091,9 @@ class TimeStream(FreqContainer, VisContainer, TODContainer):
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
             "chunks": (64, 256, 128),
+            "truncate": {
+                "weight_dataset": "vis_weight",
+            },
         },
         "vis_weight": {
             "axes": ["freq", "stack", "time"],
@@ -1097,6 +1104,7 @@ class TimeStream(FreqContainer, VisContainer, TODContainer):
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
             "chunks": (64, 256, 128),
+            "truncate": True,
         },
         "input_flags": {
             "axes": ["input", "time"],
@@ -1283,6 +1291,9 @@ class TrackBeam(FreqContainer):
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
             "chunks": (128, 2, 128, 128),
+            "truncate": {
+                "weight_dataset": "weight",
+            },
         },
         "weight": {
             "axes": ["freq", "pol", "input", "pix"],
@@ -1293,6 +1304,7 @@ class TrackBeam(FreqContainer):
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
             "chunks": (128, 2, 128, 128),
+            "truncate": True,
         },
     }
 
@@ -1611,6 +1623,9 @@ class RingMap(FreqContainer, SiderealContainer):
             "initialise": True,
             "distributed": True,
             "distributed_axis": "freq",
+            "truncate": {
+                "weight_dataset": "weight",
+            },
         },
         "weight": {
             "axes": ["pol", "freq", "ra"],
@@ -1618,6 +1633,7 @@ class RingMap(FreqContainer, SiderealContainer):
             "initialise": True,
             "distributed": True,
             "distributed_axis": "freq",
+            "truncate": True,
         },
         "dirty_beam": {
             "axes": ["beam", "pol", "freq", "ra", "el"],
@@ -1625,6 +1641,7 @@ class RingMap(FreqContainer, SiderealContainer):
             "initialise": False,
             "distributed": True,
             "distributed_axis": "freq",
+            "truncate": True,
         },
         "rms": {
             "axes": ["pol", "freq", "ra"],
@@ -1632,6 +1649,7 @@ class RingMap(FreqContainer, SiderealContainer):
             "initialise": False,
             "distributed": True,
             "distributed_axis": "freq",
+            "truncate": True,
         },
     }
 
