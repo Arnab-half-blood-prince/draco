@@ -951,7 +951,7 @@ class SiderealStream(FreqContainer, VisContainer, SiderealContainer):
             "distributed_axis": "freq",
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
-            "chunks": (64, 256, 128),
+            "chunks": (128, 256, 512),
             "truncate": {
                 "weight_dataset": "vis_weight",
             },
@@ -964,7 +964,7 @@ class SiderealStream(FreqContainer, VisContainer, SiderealContainer):
             "distributed_axis": "freq",
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
-            "chunks": (64, 256, 128),
+            "chunks": (512, 512, 1024),
             "truncate": True,
         },
         "input_flags": {
@@ -972,6 +972,7 @@ class SiderealStream(FreqContainer, VisContainer, SiderealContainer):
             "dtype": np.float32,
             "initialise": True,
             "distributed": False,
+            "chunks": (2048, 2048),
         },
         "gain": {
             "axes": ["freq", "input", "ra"],
@@ -979,6 +980,7 @@ class SiderealStream(FreqContainer, VisContainer, SiderealContainer):
             "initialise": False,
             "distributed": True,
             "distributed_axis": "freq",
+            "chunks": (128, 128, 128),
         },
     }
 
@@ -1009,24 +1011,28 @@ class SystemSensitivity(FreqContainer, TODContainer):
             "dtype": np.float32,
             "initialise": True,
             "distributed": True,
+            "chunks": (256, 256, 256),
         },
         "radiometer": {
             "axes": ["freq", "pol", "time"],
             "dtype": np.float32,
             "initialise": True,
             "distributed": True,
+            "chunks": (256, 256, 256),
         },
         "weight": {
             "axes": ["freq", "pol", "time"],
             "dtype": np.float32,
             "initialise": True,
             "distributed": True,
+            "chunks": (256, 256, 256),
         },
         "frac_lost": {
             "axes": ["freq", "time"],
             "dtype": np.float32,
             "initialise": True,
             "distributed": True,
+            "chunks": (2048, 2048),
         },
     }
 
@@ -1065,6 +1071,7 @@ class RFIMask(FreqContainer, TODContainer):
             "initialise": True,
             "distributed": False,
             "distributed_axis": "freq",
+            "chunks": (4096, 4096),
         }
     }
 
@@ -1865,6 +1872,7 @@ class DelaySpectrum(ContainerBase):
             "initialise": True,
             "distributed": True,
             "distributed_axis": "baseline",
+            "chunks": (1500, 1500),
         }
     }
 
@@ -2061,6 +2069,7 @@ class FormedBeam(FreqContainer):
             "initialise": True,
             "distributed": True,
             "distributed_axis": "freq",
+            "chunks": (2048, 2048, 2048),
         },
         "weight": {
             "axes": ["object_id", "pol", "freq"],
@@ -2068,18 +2077,21 @@ class FormedBeam(FreqContainer):
             "initialise": True,
             "distributed": True,
             "distributed_axis": "freq",
+            "chunks": (2048, 2048, 2048),
         },
         "position": {
             "axes": ["object_id"],
             "dtype": np.dtype([("ra", np.float64), ("dec", np.float64)]),
             "initialise": True,
             "distributed": False,
+            "chunks": (4194304,),
         },
         "redshift": {
             "axes": ["object_id"],
             "dtype": np.dtype([("z", np.float64), ("z_error", np.float64)]),
             "initialise": True,
             "distributed": False,
+            "chunks": (4194304,),
         },
     }
 
