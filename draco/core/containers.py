@@ -1011,7 +1011,7 @@ class SystemSensitivity(FreqContainer, TODContainer):
             "dtype": np.float32,
             "initialise": True,
             "distributed": True,
-            "chunks": (256, 256, 256),
+            "chunks": (1024, 1024, 1024),
         },
         "radiometer": {
             "axes": ["freq", "pol", "time"],
@@ -1071,7 +1071,7 @@ class RFIMask(FreqContainer, TODContainer):
             "initialise": True,
             "distributed": False,
             "distributed_axis": "freq",
-            "chunks": (4096, 4096),
+            "chunks": (32768, 32768),
         }
     }
 
