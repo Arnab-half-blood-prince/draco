@@ -745,7 +745,8 @@ class Truncate(task.SingleTask):
             if params[key] is None:
                 try:
                     params[key] = container._dataset_spec[dset]["truncate"][key]
-                except KeyError:
+                except (KeyError, TypeError):
+                    # If key is not defined or if "truncate" is a bool (we tested it's not False), use defaults.
                     params[key] = self.default_params[key]
 
         # Factor of 3 for variance over uniform distribution of truncation errors
