@@ -1642,7 +1642,7 @@ class RingMap(FreqContainer, SiderealContainer):
             "distributed": True,
             "distributed_axis": "freq",
             "truncate": True,
-            "chunks": (128, 128, 128)
+            "chunks": (128, 128, 128),
         },
         "dirty_beam": {
             "axes": ["beam", "pol", "freq", "ra", "el"],
@@ -1660,7 +1660,7 @@ class RingMap(FreqContainer, SiderealContainer):
             "distributed": True,
             "distributed_axis": "freq",
             "truncate": True,
-            "chunks": (128, 128, 128)
+            "chunks": (128, 128, 128),
         },
     }
 
