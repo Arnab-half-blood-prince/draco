@@ -706,7 +706,7 @@ class Truncate(task.SingleTask):
         "variance_increase": 1e-3,
     }
 
-    @functools.cache
+    @functools.lru_cache()
     def _get_params(self, container, dset):
         """
         Load truncation parameters for a dataset from config or container defaults.
