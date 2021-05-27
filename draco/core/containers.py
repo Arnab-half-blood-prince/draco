@@ -301,6 +301,8 @@ class ContainerBase(memh5.BasicCont):
                     for i, l in enumerate(self[dset].shape):
                         axis_name = self.dataset_spec[dset]["axes"][i]
                         chunks += (chunk_sizes_default.get(axis_name, l),)
+                    self._data._storage_root[dset].chunks = chunks
+
             if (
                 "compression" in self.dataset_spec[dset]
                 and self[dset].compression is None
