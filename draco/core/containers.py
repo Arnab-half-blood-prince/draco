@@ -143,7 +143,7 @@ class ContainerBase(memh5.BasicCont):
         skip_datasets = kwargs.pop("skip_datasets", False)
         dist = kwargs.pop("distributed", True)
         comm = kwargs.pop("comm", None)
-        self.allow_chunked = kwargs.pop("allow_chunked", False)
+        self.allow_chunked = kwargs.pop("allow_chunked", True)
 
         # Run base initialiser
         memh5.BasicCont.__init__(self, distributed=dist, comm=comm)
@@ -301,6 +301,7 @@ class ContainerBase(memh5.BasicCont):
                     for i, l in enumerate(self[dset].shape):
                         axis_name = self.dataset_spec[dset]["axes"][i]
                         chunks += (chunk_sizes_default.get(axis_name, l),)
+                    self._data._storage_root[dset].chunks = chunks
             if (
                 "compression" in self.dataset_spec[dset]
                 and self[dset].compression is None
@@ -1495,6 +1496,10 @@ class VisGridStream(FreqContainer, SiderealContainer):
             "initialise": True,
             "distributed": True,
             "distributed_axis": "freq",
+            "chunks": (128, 128, 128, 128, 1024),
+            "compression": COMPRESSION,
+            "compression_opts": COMPRESSION_OPTS,
+
         },
         "vis_weight": {
             "axes": ["pol", "freq", "ew", "ns", "ra"],
@@ -1502,12 +1507,18 @@ class VisGridStream(FreqContainer, SiderealContainer):
             "initialise": True,
             "distributed": True,
             "distributed_axis": "freq",
+            "chunks": (128, 128, 128, 256, 1024),
+            "compression": COMPRESSION,
+            "compression_opts": COMPRESSION_OPTS,
         },
         "redundancy": {
             "axes": ["pol", "ew", "ns", "ra"],
             "dtype": np.int32,
             "initialise": True,
             "distributed": False,
+            "chunks": (128, 128, 512, 4096),
+            "compression": COMPRESSION,
+            "compression_opts": COMPRESSION_OPTS,
         },
     }
 
@@ -1633,7 +1644,7 @@ class RingMap(FreqContainer, SiderealContainer):
             "truncate": {
                 "weight_dataset": "weight",
             },
-            "chunks": (8, 4, 64, 64, 64),
+            "chunks": (128, 128, 128, 1024, 1024),
         },
         "weight": {
             "axes": ["pol", "freq", "ra"],
@@ -1642,7 +1653,7 @@ class RingMap(FreqContainer, SiderealContainer):
             "distributed": True,
             "distributed_axis": "freq",
             "truncate": True,
-            "chunks": (128, 128, 128),
+            "chunks": (4096, 4096, 4096),
         },
         "dirty_beam": {
             "axes": ["beam", "pol", "freq", "ra", "el"],
@@ -1651,7 +1662,7 @@ class RingMap(FreqContainer, SiderealContainer):
             "distributed": True,
             "distributed_axis": "freq",
             "truncate": True,
-            "chunks": (8, 4, 64, 64, 64),
+            "chunks": (128, 128, 128, 1024, 512),
         },
         "rms": {
             "axes": ["pol", "freq", "ra"],
@@ -1660,7 +1671,7 @@ class RingMap(FreqContainer, SiderealContainer):
             "distributed": True,
             "distributed_axis": "freq",
             "truncate": True,
-            "chunks": (128, 128, 128),
+            "chunks": (2056, 2056, 4096),
         },
     }
 
