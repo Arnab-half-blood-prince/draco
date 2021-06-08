@@ -800,7 +800,7 @@ class Truncate(task.SingleTask):
                         val.imag, specs["fixed_precision"]
                     ).reshape(old_shape)
                 else:
-                    data[dset][:] = bit_truncate_fixed(
+                    data[dset][:] = truncate.bit_truncate_relative(
                         val, specs["fixed_precision"]
                     ).reshape(old_shape)
             else:
@@ -814,18 +814,18 @@ class Truncate(task.SingleTask):
                     data[specs["weight_dataset"]][:], data[dset][:].size
                 )
                 if np.iscomplexobj(data[dset]):
-                    data[dset][:].real = bit_truncate_weights(
+                    data[dset][:].real = truncate.bit_truncate_weights(
                         val.real,
                         invvar * 2.0 / specs["variance_increase"],
                         specs["fixed_precision"],
                     ).reshape(old_shape)
-                    data[dset][:].imag = bit_truncate_weights(
+                    data[dset][:].imag = truncate.bit_truncate_weights(
                         val.imag,
                         invvar * 2.0 / specs["variance_increase"],
                         specs["fixed_precision"],
                     ).reshape(old_shape)
                 else:
-                    data[dset][:] = bit_truncate_weights(
+                    data[dset][:] = truncate.bit_truncate_weights(
                         val,
                         invvar / specs["variance_increase"],
                         specs["fixed_precision"],
