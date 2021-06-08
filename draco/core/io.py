@@ -32,6 +32,7 @@ from yaml import dump as yamldump
 
 from caput import pipeline
 from caput import config
+from caput import truncate
 
 from cora.util import units
 
@@ -39,7 +40,6 @@ from drift.core import telescope, manager, beamtransfer
 
 from . import task
 from ..util.exception import ConfigError
-from ..util.truncate import bit_truncate_weights, bit_truncate_fixed
 
 
 def _list_of_filelists(files: Union[List[str], List[List[str]]]) -> List[List[str]]:
@@ -793,10 +793,10 @@ class Truncate(task.SingleTask):
             val = np.ndarray.reshape(data[dset][:], data[dset][:].size)
             if specs["weight_dataset"] is None:
                 if np.iscomplexobj(data[dset]):
-                    data[dset][:].real = bit_truncate_fixed(
+                    data[dset][:].real = truncate.bit_truncate_relative(
                         val.real, specs["fixed_precision"]
                     ).reshape(old_shape)
-                    data[dset][:].imag = bit_truncate_fixed(
+                    data[dset][:].imag = truncate.bit_truncate_relative(
                         val.imag, specs["fixed_precision"]
                     ).reshape(old_shape)
                 else:
