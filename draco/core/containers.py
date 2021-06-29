@@ -1887,7 +1887,7 @@ class DelaySpectrum(ContainerBase):
             "initialise": True,
             "distributed": True,
             "distributed_axis": "baseline",
-            "chunks": (1500, 1500),
+            "chunks": (2048, 2048),
         }
     }
 
