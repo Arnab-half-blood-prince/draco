@@ -265,6 +265,7 @@ class SingleTask(MPILoggedTask, pipeline.BasicContMixin):
     output_format = config.file_format()
     output_compression = config.Property(default=None, proptype=str)
     output_compression_opts = config.Property(default=None)
+    output_chunking = config.Property(default=True, proptype=bool)
 
     nan_check = config.Property(default=True, proptype=bool)
     nan_skip = config.Property(default=True, proptype=bool)
@@ -391,6 +392,12 @@ class SingleTask(MPILoggedTask, pipeline.BasicContMixin):
             # Expand any variables in the path
             outfile = os.path.expanduser(outfile)
             outfile = os.path.expandvars(outfile)
+
+            if self.output_chunking:
+                try:
+                    output.chunkify()
+                except AttributeError:
+                    self.log.warning(f"Can't chunkify {type(output)}.")
 
             self.log.debug("Writing output %s to disk.", outfile)
             self.write_output(
