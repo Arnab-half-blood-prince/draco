@@ -5,6 +5,7 @@ from skyfield.api import Star, Angle
 
 from caput import config
 from caput import time as ctime
+from caput.pipeline import PipelineRuntimeError
 
 from cora.util import units
 
@@ -606,6 +607,9 @@ class BeamFormBase(task.SingleTask):
 
         if "position" not in catalog:
             raise ValueError("Input is missing a position table.")
+
+        if not hasattr(self, "epoch"):
+            raise PipelineRuntimeError("Epoch not set. Was the requested data not available?")
 
         self.sra, self.sdec = icrs_to_cirs(
             catalog["position"]["ra"], catalog["position"]["dec"], self.epoch
