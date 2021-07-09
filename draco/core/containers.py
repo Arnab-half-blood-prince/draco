@@ -1499,7 +1499,6 @@ class VisGridStream(FreqContainer, SiderealContainer):
             "chunks": (128, 128, 128, 128, 1024),
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
-
         },
         "vis_weight": {
             "axes": ["pol", "freq", "ew", "ns", "ra"],

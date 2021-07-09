@@ -609,7 +609,9 @@ class BeamFormBase(task.SingleTask):
             raise ValueError("Input is missing a position table.")
 
         if not hasattr(self, "epoch"):
-            raise PipelineRuntimeError("Epoch not set. Was the requested data not available?")
+            raise PipelineRuntimeError(
+                "Epoch not set. Was the requested data not available?"
+            )
 
         self.sra, self.sdec = icrs_to_cirs(
             catalog["position"]["ra"], catalog["position"]["dec"], self.epoch
