@@ -779,7 +779,7 @@ class Truncate(task.SingleTask):
         """
 
         if self.ensure_chunked:
-            data.chunkify()
+            data.ensure_chunked()
 
         for dset in data._dataset_spec:
             # get truncation parameters from config or container defaults

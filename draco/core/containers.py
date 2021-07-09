@@ -282,7 +282,7 @@ class ContainerBase(memh5.BasicCont):
 
         return dset
 
-    def chunkify(self):
+    def ensure_chunked(self):
         """Ensure datasets that have chunk/compression specs are chunked.
 
         For every dataset, check if chunks and compression are set, and
