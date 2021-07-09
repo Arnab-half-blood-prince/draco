@@ -952,7 +952,7 @@ class SiderealStream(FreqContainer, VisContainer, SiderealContainer):
             "distributed_axis": "freq",
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
-            "chunks": (128, 256, 512),
+            "chunks": (128, 128, 256),
             "truncate": {
                 "weight_dataset": "vis_weight",
             },
@@ -965,7 +965,7 @@ class SiderealStream(FreqContainer, VisContainer, SiderealContainer):
             "distributed_axis": "freq",
             "compression": COMPRESSION,
             "compression_opts": COMPRESSION_OPTS,
-            "chunks": (512, 512, 1024),
+            "chunks": (256, 512, 256),
             "truncate": True,
         },
         "input_flags": {
@@ -973,7 +973,7 @@ class SiderealStream(FreqContainer, VisContainer, SiderealContainer):
             "dtype": np.float32,
             "initialise": True,
             "distributed": False,
-            "chunks": (2048, 2048),
+            "chunks": (2048, 4096),
         },
         "gain": {
             "axes": ["freq", "input", "ra"],
@@ -1033,7 +1033,7 @@ class SystemSensitivity(FreqContainer, TODContainer):
             "dtype": np.float32,
             "initialise": True,
             "distributed": True,
-            "chunks": (2048, 2048),
+            "chunks": (1024, 9216),
         },
     }
 
