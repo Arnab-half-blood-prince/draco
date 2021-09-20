@@ -54,6 +54,7 @@ class BeamFormBase(task.SingleTask):
     weight = config.enum(["natural", "uniform", "inverse_variance"], default="natural")
     timetrack = config.Property(proptype=float, default=900.0)
     freqside = config.Property(proptype=int, default=None)
+    data_available = True
 
     def setup(self, manager):
         """Generic setup method.
@@ -609,9 +610,8 @@ class BeamFormBase(task.SingleTask):
             raise ValueError("Input is missing a position table.")
 
         if not hasattr(self, "epoch"):
-            raise PipelineRuntimeError(
-                "Epoch not set. Was the requested data not available?"
-            )
+            self.log.warning("Epoch not set. Was the requested data not available?")
+            self.data_available = False
 
         self.sra, self.sdec = icrs_to_cirs(
             catalog["position"]["ra"], catalog["position"]["dec"], self.epoch
@@ -661,6 +661,9 @@ class BeamForm(BeamFormBase):
         self._process_data(data)
         self._process_catalog(self.catalog)
 
+        if not self.data_available:
+            return None
+
         # Call generic process method.
         return super(BeamForm, self).process()
 
@@ -699,6 +702,9 @@ class BeamFormCat(BeamFormBase):
             Formed beams at each source.
         """
         self._process_catalog(source_cat)
+
+        if not self.data_available:
+            return None
 
         # Call generic process method.
         return super(BeamFormCat, self).process()
